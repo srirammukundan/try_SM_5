@@ -48,9 +48,9 @@ jobs:
             command: |
               export TAG=v${CIRCLE_BUILD_NUM}
               export IMAGE_NAME=capstone
-              docker build -t 9894034584/$IMAGE_NAME:$TAG .
-              docker login -u 9894034584 -p 0af91af0-2283-4935-b21f-b2d6424df259 
-              docker push 9894034584/$IMAGE_NAME:$TAG
+              #docker build -t 9894034584/$IMAGE_NAME:$TAG .
+              #docker login -u 9894034584 -p 0af91af0-2283-4935-b21f-b2d6424df259 
+              #docker push 9894034584/$IMAGE_NAME:$TAG
               
               aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 538617139882.dkr.ecr.us-east-1.amazonaws.com
               docker build -t capstone .
@@ -148,12 +148,14 @@ workflows:
             - "build-docker-image"
       - aws-ecr/build-and-push-image:
           name: build-and-push-image-ecr
-          account-url: AWS_ECR_ACCOUNT_URL
-          region: $AWS_DEFAULT_REGION
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          create-repo: true
+          dockerfile: Dockerfile
+          path: .
+          region: AWS_DEFAULT_REGION
           repo: capstone
-          tag: ${CIRCLE_SHA1}
-          #dockerfile: ~/project/Dockerfile
-          #path: ~/project/
+          tag: "$CIRCLE_SHA1"
       - aws-eks/create-cluster:
           cluster-name: eks-orb-capstone-project-deployment-${CIRCLE_WORKFLOW_ID:0:7}
           aws-region: $AWS_DEFAULT_REGION
