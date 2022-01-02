@@ -148,7 +148,7 @@ workflows:
           create-repo: true
           dockerfile: Dockerfile
           path: .
-          region: $AWS_DEFAULT_REGION
+          region: AWS_DEFAULT_REGION
           repo: capstone
           tag: "v01"
       #- aws-eks/create-cluster:
