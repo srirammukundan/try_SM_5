@@ -175,10 +175,10 @@ workflows:
           aws-region: $AWS_DEFAULT_REGION
           requires:
             - test-application
-      - aws-eks/delete-cluster:
-          cluster-name: capstone-cluster
-          aws-region: $AWS_DEFAULT_REGION
-          wait: true
-          requires:
-            - undeploy-application
+      #- aws-eks/delete-cluster:
+      #    cluster-name: capstone-cluster
+      #    aws-region: $AWS_DEFAULT_REGION
+      #    wait: true
+      #    requires:
+      #      - undeploy-application
     
