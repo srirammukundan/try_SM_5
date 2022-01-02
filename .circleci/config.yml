@@ -33,7 +33,7 @@ jobs:
         - run:
             name: Build Docker Image
             command: |
-              export TAG=v${CIRCLE_BUILD_NUM}
+              export TAG=v01
               export IMAGE_NAME=capstone
               docker build -t 9894034584/$IMAGE_NAME:$TAG .
     push-docker-image:
@@ -70,7 +70,7 @@ jobs:
           description: |
             AWS region
           type: string
-          default: "us-west-2"
+          default: "us-east-2"
       steps:
         - checkout
         - aws-eks/update-kubeconfig-with-authenticator:
@@ -148,9 +148,9 @@ workflows:
           create-repo: true
           dockerfile: Dockerfile
           path: .
-          region: AWS_DEFAULT_REGION
+          region: $AWS_DEFAULT_REGION
           repo: capstone
-          tag: "$CIRCLE_SHA1"
+          tag: "v01"
       #- aws-eks/create-cluster:
       #    cluster-name: capstone-cluster
       #    aws-region: $AWS_DEFAULT_REGION
@@ -159,15 +159,15 @@ workflows:
       - deploy-application:
           cluster-name: capstone-cluster
           aws-region: $AWS_DEFAULT_REGION
-          docker-image-name: "${AWS_ECR_ACCOUNT_URL}/eks_orb_capstone_project:${CIRCLE_SHA1}"
-          version-info: "${CIRCLE_SHA1}"
+          docker-image-name: "${AWS_ECR_ACCOUNT_URL}/capstone:v01"
+          version-info: "v01"
           requires:
              - build-and-push-image-ecr
       #      - aws-eks/create-cluster
       - test-application:
           cluster-name: capstone-cluster
           aws-region: $AWS_DEFAULT_REGION
-          expected-version-info: "${CIRCLE_SHA1}"
+          expected-version-info: "v01"
           requires:
             - deploy-application
       - undeploy-application:
